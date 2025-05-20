@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from langchain_community.document_loaders import (
     DirectoryLoader, 
     TextLoader,
-    UnstructuredPDFLoader, 
+    PyPDFLoader,  # Changed from UnstructuredPDFLoader to PyPDFLoader
     Docx2txtLoader,  
 )
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -45,11 +45,11 @@ class RAGSystem:
         )
         documents.extend(txt_loader.load())
         
-        # Load PDF files
+        # Load PDF files - using PyPDFLoader instead of UnstructuredPDFLoader
         pdf_loader = DirectoryLoader(
             self.data_path,
             glob="*.pdf",
-            loader_cls=UnstructuredPDFLoader
+            loader_cls=PyPDFLoader
         )
         documents.extend(pdf_loader.load())
         
