@@ -8,7 +8,6 @@ from langchain_chroma import Chroma
 from langchain_groq import ChatGroq
 from langchain.prompts import ChatPromptTemplate
 
-# Load environment variables
 load_dotenv()
 
 class RAGSystem:
@@ -52,22 +51,24 @@ class RAGSystem:
 
     def create_vector_db(self, chunks):
         """Create and save vector database"""
+        ##if path exists clear it
         if os.path.exists(self.chroma_path):
             shutil.rmtree(self.chroma_path)
 
         try:
-            # Test embedding
+            # Testing embeddings
             test_embed = self.embeddings.embed_query("test")
             print("Local embedding test successful!")
 
             # Create the database with persist_directory
+            #persist ensures data is stored permanantly and isnt volatile
+            
             db = Chroma.from_documents(
                 documents=chunks,
                 embedding=self.embeddings,
                 persist_directory=self.chroma_path
             )
             
-            # No need to call persist() manually with newer versions
             print(f"Successfully saved {len(chunks)} chunks to Chroma DB.")
             return True
         except Exception as e:
@@ -88,35 +89,29 @@ class RAGSystem:
     def query(self, query_text, k=5):
         """Query the RAG system"""
         # Load the database
-        try:
-            db = Chroma(embedding_function=self.embeddings, persist_directory=self.chroma_path)
-        except Exception as e:
-            print(f"Error loading database: {str(e)}")
-            return {"response": "Database not found. Please train the system first.", "sources": []}
-
-        # Get relevant documents
+        
+        db = Chroma(embedding_function=self.embeddings, persist_directory=self.chroma_path)
+        
+    
         results = db.similarity_search_with_relevance_scores(query_text, k=k)
         if len(results) == 0:
             return {"response": "No relevant information found in the knowledge base.", "sources": []}
 
-        # Prepare context from relevant documents
+        # creating context
         context = "\n\n---\n\n".join([doc.page_content for doc, _score in results])
         prompt_template = ChatPromptTemplate.from_template(self.prompt_template)
         prompt = prompt_template.format(context=context, question=query_text)
 
-        # Query the LLM
-        try:
-            llm = ChatGroq(model="llama3-70b-8192")
-            response = llm.invoke(prompt)
-            sources = [doc.metadata.get("source", None) for doc, _score in results]
-            
-            return {
-                "response": response.content,
-                "sources": sources
-            }
-        except Exception as e:
-            print(f"Error querying LLM: {str(e)}")
-            return {"response": f"Error querying LLM: {str(e)}", "sources": []}
+        # Query
+        llm = ChatGroq(model="llama3-70b-8192")
+        response = llm.invoke(prompt)
+        sources = [doc.metadata.get("source", None) for doc, _score in results]
+        
+        return {
+            "response": response.content,
+            "sources": sources
+        }
+        
 
     def save_file(self, file_content, filename):
         """Save uploaded file content to data directory"""
@@ -139,9 +134,11 @@ class RAGSystem:
 
 
 if __name__ == "__main__":
-    # Example usage
+   
     rag = RAGSystem()
     rag.train()
+
+    #testing
     result = rag.query("What is RAG?")
     print(result["response"])
     print("Sources:", result["sources"])

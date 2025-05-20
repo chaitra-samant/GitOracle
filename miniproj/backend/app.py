@@ -7,18 +7,18 @@ from rag import RAGSystem
 
 app = FastAPI(title="RAG System API")
 
-# Configure CORS
+# CORS for multipf application
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=["*"],  
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"], 
+    allow_headers=["*"],  
 )
 
-# Initialize the RAG system
+# Instance of rag class from rag.py
 rag_system = RAGSystem()
-
+# data model (pydantic) for validation
 class QueryRequest(BaseModel):
     query: str
 
@@ -41,7 +41,10 @@ async def upload_file(file: UploadFile = File(...)):
 
 @app.post("/train")
 async def train_system():
-    """Train the RAG system on uploaded documents"""
+    """Train the RAG system on uploaded documents
+       load docs -> chunk -> create vector db    
+        
+    """
     
     success = rag_system.train()
     if success:

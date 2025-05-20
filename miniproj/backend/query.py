@@ -1,3 +1,6 @@
+###used to test rag on cli not required for gui
+
+
 import argparse
 import os
 from langchain_chroma import Chroma
