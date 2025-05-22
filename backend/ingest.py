@@ -36,7 +36,7 @@ class RepoIngestor:
     
     def get_filename(self, url):
         """
-        Returns the sanitized filename for the content file
+        Returns the filename for the content file
         """
         safe_name = self.clean_fname(url)
         return f"{safe_name}_content.txt"
@@ -44,7 +44,7 @@ class RepoIngestor:
 
 
 if __name__ == "__main__":
-    url = "https://github.com/Dhruvp18/ExpenFlow"
+    url = "https://github.com/octocat/Hello-World"
     url = url.strip()
 
     ingestor = RepoIngestor()

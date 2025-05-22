@@ -4,3 +4,6 @@ langchain
 langchain-community 
 sentence-transformers
 python-dotenv
+langchain_huggingface
+langchain_groq
+langchain_chroma
