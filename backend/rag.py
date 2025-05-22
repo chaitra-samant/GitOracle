@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from langchain_community.document_loaders import (
     DirectoryLoader, 
     TextLoader,
-    PyPDFLoader,  # Changed from UnstructuredPDFLoader to PyPDFLoader
+    PyPDFLoader,  
     Docx2txtLoader,  
 )
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -77,12 +77,12 @@ class RAGSystem:
 
     def create_vector_db(self, chunks):
         """Create and save vector database"""
-        ##if path exists clear it
+       
         if os.path.exists(self.chroma_path):
             shutil.rmtree(self.chroma_path)
 
         try:
-            # Testing embeddings
+           
             test_embed = self.embeddings.embed_query("test")
             print("Local embedding test successful!")
 
