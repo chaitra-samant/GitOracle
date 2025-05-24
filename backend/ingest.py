@@ -1,6 +1,10 @@
-from gitingest import ingest
 import os
 import re
+import asyncio
+import nest_asyncio
+
+# Apply nest_asyncio to allow nested event loops
+nest_asyncio.apply()
 
 DATA_DIR = "data"
 
@@ -17,7 +21,13 @@ class RepoIngestor:
         """Ingest repository and save content with better file structure"""
         try:
             print(f"Ingesting repository: {url}")
-            result = ingest(url)
+            
+            # Try different approaches to handle async
+            result = self._safe_ingest(url)
+            
+            if not result:
+                print("Failed to get repository content")
+                return False
             
             # Handle different return formats from gitingest
             if isinstance(result, tuple):
@@ -71,6 +81,97 @@ class RepoIngestor:
             print(f"Failed to ingest repository: {e}")
             return False
     
+    def _safe_ingest(self, url):
+        """Safely handle gitingest with proper async handling"""
+        try:
+            from gitingest import ingest
+            
+            # Method 1: Try direct import and call
+            try:
+                return ingest(url)
+            except RuntimeError as e:
+                if "asyncio.run() cannot be called from a running event loop" in str(e):
+                    # Method 2: Use nest_asyncio (already applied above)
+                    try:
+                        return ingest(url)
+                    except:
+                        # Method 3: Run in new thread
+                        import concurrent.futures
+                        import threading
+                        
+                        def run_ingest():
+                            return ingest(url)
+                        
+                        with concurrent.futures.ThreadPoolExecutor() as executor:
+                            future = executor.submit(run_ingest)
+                            return future.result(timeout=300)  # 5 minute timeout
+                else:
+                    raise e
+                    
+        except Exception as e:
+            print(f"Error in _safe_ingest: {e}")
+            # Fallback: Try to get basic repo info via GitHub API
+            return self._fallback_github_api(url)
+    
+    def _fallback_github_api(self, url):
+        """Fallback method using GitHub API if gitingest fails"""
+        try:
+            import requests
+            import base64
+            
+            # Extract owner and repo from URL
+            parts = url.replace('https://github.com/', '').split('/')
+            if len(parts) < 2:
+                return None
+                
+            owner, repo = parts[0], parts[1]
+            
+            # Get repository contents via GitHub API
+            api_url = f"https://api.github.com/repos/{owner}/{repo}/contents"
+            
+            def get_files_recursive(path=""):
+                files_content = []
+                api_path = f"{api_url}/{path}" if path else api_url
+                
+                try:
+                    response = requests.get(api_path)
+                    if response.status_code != 200:
+                        return files_content
+                    
+                    items = response.json()
+                    if not isinstance(items, list):
+                        return files_content
+                    
+                    for item in items:
+                        if item['type'] == 'file':
+                            # Get file content
+                            file_response = requests.get(item['download_url'])
+                            if file_response.status_code == 200:
+                                try:
+                                    file_content = file_response.text
+                                    files_content.append(f"\n=== {item['path']} ===\n{file_content}")
+                                except:
+                                    files_content.append(f"\n=== {item['path']} ===\n[Binary file]")
+                        elif item['type'] == 'dir' and len(path.split('/')) < 3:  # Limit depth
+                            files_content.extend(get_files_recursive(item['path']))
+                    
+                    return files_content
+                except:
+                    return files_content
+            
+            print("Using GitHub API fallback...")
+            files = get_files_recursive()
+            content = "\n".join(files)
+            
+            if content:
+                return content
+            else:
+                return None
+                
+        except Exception as e:
+            print(f"Fallback method also failed: {e}")
+            return None
+
     def get_filename(self, url):
         """Returns the filename for the content file"""
         safe_name = self.clean_fname(url)

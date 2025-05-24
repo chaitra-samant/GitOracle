@@ -76,10 +76,9 @@ Please provide a detailed answer based on the context above. If you're discussin
         all_chunks = []
         
         for doc in documents:
-            
             content = doc.page_content
             
-            # Split by common file separators or patterns -> helps in retrieval of file based queries later
+            # Split by common file separators or patterns
             file_sections = self.parse_files_from_content(content)
             
             if not file_sections:
@@ -90,7 +89,6 @@ Please provide a detailed answer based on the context above. If you're discussin
                 filename = section["filename"]
                 file_content = section["content"]
                 
-           
                 splitter = RecursiveCharacterTextSplitter(
                     chunk_size=1000,
                     chunk_overlap=300,
@@ -104,14 +102,13 @@ Please provide a detailed answer based on the context above. If you're discussin
                     metadata={"source": filename, "original_source": doc.metadata.get("source", "")}
                 )
                 
-           
                 chunks = splitter.split_documents([temp_doc])
                 
-                # add filename to each chunk's metadata -> also helps during querying and retrieval
+                # Add filename to each chunk's metadata
                 for chunk in chunks:
                     chunk.metadata["filename"] = filename
                     chunk.metadata["file_type"] = self.get_file_type(filename)
-                    # adding filename context to the beginning of chunk content
+                    # Add filename context to the beginning of chunk content
                     chunk.page_content = f"[File: {filename}]\n\n{chunk.page_content}"
                 
                 all_chunks.extend(chunks)
@@ -123,8 +120,6 @@ Please provide a detailed answer based on the context above. If you're discussin
         """Parse the ingested content to identify individual files"""
         file_sections = []
         
-        # Look for file separators (adjust based on your ingest format)
-        # Common patterns from gitingest or similar tools
         lines = content.split('\n')
         current_file = None
         current_content = []
@@ -184,7 +179,7 @@ Please provide a detailed answer based on the context above. If you're discussin
     
     def create_db(self, chunks):
         try:
-            # Testing embeddings
+            # Test embeddings
             _ = self.embeddings.embed_query("test")  
 
             if os.path.exists(self.chroma_dir):
@@ -248,14 +243,15 @@ Please provide a detailed answer based on the context above. If you're discussin
         
         return success
     
-    def query(self, query_text, k=5):
+    def search_and_answer(self, query_text, k=5):
+        """Search the knowledge base and provide an answer - THIS IS THE METHOD THE API CALLS"""
         if not os.path.exists(self.chroma_dir):
             print("Chroma DB not found. Train first.")
             return {"response": "No knowledge base available.", "sources": []}
         
         db = Chroma(embedding_function=self.embeddings, persist_directory=self.chroma_dir)
         
-        
+        # Search for similar documents
         results = db.similarity_search(query_text, k=k)
         
         if not results:
@@ -284,11 +280,11 @@ Please provide a detailed answer based on the context above. If you're discussin
 
         return {
             "response": response.content,
-            "sources": list(set(sources))  # keep only unique sources from chunks
+            "sources": list(set(sources))  # Remove duplicates
         }
 
-    def query(self):
-        """Interactive query loop"""
+    def interactive_query(self):
+        """Interactive query loop for command line usage"""
         if not os.path.exists(self.chroma_dir):
             print("Chroma DB not found. Please train first.")
             return
@@ -307,7 +303,7 @@ Please provide a detailed answer based on the context above. If you're discussin
                     break
                 
                 print("\nSearching...")
-                result = self.query(query)
+                result = self.search_and_answer(query)
                 
                 print(f"\nAnswer:\n{result['response']}")
                 print(f"\nSources: {', '.join(result['sources'])}")
@@ -332,15 +328,15 @@ def main():
         
         if trained:
             print("Training completed successfully!")
-            # Start query loop
-            rag.query()
+            # Start interactive query loop
+            rag.interactive_query()
         else:
             print("Training failed.")
     else:
         # Check if we have an existing database
         if os.path.exists(rag.chroma_dir):
             print("Found existing database. Starting interactive mode...")
-            rag.query()
+            rag.interactive_query()
         else:
             print("Usage: python rag.py <github_repo_url>")
             print("Or run with existing database for interactive queries.")
