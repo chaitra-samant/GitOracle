@@ -1,0 +1,76 @@
+Directory structure:
+└── dhruvp18-expenflow/
+    ├── readme.md
+    ├── backend/
+    │   ├── ChatBotServer.js
+    │   ├── FraudDetection.py
+    │   ├── Invoice_backend.py
+    │   ├── ReportGeneration.py
+    │   ├── app.py
+    │   ├── company_expense_policy.txt
+    │   ├── employee_report_Unknown.docx
+    │   ├── hr_report.docx
+    │   ├── package-lock.json
+    │   ├── package.json
+    │   ├── server.js
+    │   ├── .env
+    │   ├── .gitignore
+    │   ├── __pycache__/
+    │   ├── models/
+    │   │   └── invoice.js
+    │   ├── routes/
+    │   │   ├── companyInvoices.js
+    │   │   ├── invoices.js
+    │   │   └── userInvoices.js
+    │   └── uploads/
+    │       └── message (1).txt
+    └── frontend/
+        ├── README.md
+        ├── package-lock.json
+        ├── package.json
+        ├── postcss.config.js
+        ├── tailwind.config.js
+        ├── .env
+        ├── .gitignore
+        ├── public/
+        │   ├── index.html
+        │   ├── manifest.json
+        │   └── robots.txt
+        └── src/
+            ├── App.css
+            ├── App.js
+            ├── App.test.js
+            ├── fonts.css
+            ├── index.css
+            ├── index.js
+            ├── reportWebVitals.js
+            ├── setupTests.js
+            ├── assets/
+            │   └── fonts/
+            │       ├── mario.js
+            │       ├── mario.ttf
+            │       └── mario2.js
+            ├── components/
+            │   ├── Chatbot.js
+            │   ├── Dummy.js
+            │   ├── GameBoy.js
+            │   ├── GameCard.js
+            │   ├── Landing.js
+            │   ├── Navbar.js
+            │   ├── UserDashboard.js
+            │   ├── UserUpload.js
+            │   ├── dummydata.js
+            │   ├── emp_dashboard.js
+            │   ├── org_dashboard.js
+            │   ├── test.js
+            │   ├── test2.js
+            │   ├── LogInButton/
+            │   │   └── LoginButton.js
+            │   └── LogOutButton/
+            │       └── LogoutButton.js
+            ├── hooks/
+            │   ├── useFetchUserInvoices.js
+            │   ├── useGameControls.js
+            │   └── useInvoicesByCompany.js
+            └── services/
+                └── api.js

@@ -1,0 +1,77 @@
+Directory structure:
+└── dhruvp18-decora-virtual-interior-designer/
+    ├── README.md
+    ├── package.json
+    ├── requirements.txt
+    ├── public/
+    │   ├── index.html
+    │   ├── manifest.json
+    │   ├── robots.txt
+    │   ├── scene.bin
+    │   └── scene.gltf
+    └── src/
+        ├── App.js
+        ├── App.test.js
+        ├── index.css
+        ├── index.js
+        ├── reportWebVitals.js
+        ├── setupTests.js
+        └── components/
+            ├── ChatBot/
+            │   ├── Chatbot.js
+            │   └── server.js
+            ├── Floorplan/
+            │   ├── Cart.css
+            │   ├── Cart.js
+            │   ├── CartItems.js
+            │   ├── Floorplan2d.css
+            │   ├── Floorplan2d.js
+            │   ├── Floorplan3d.css
+            │   ├── Floorplan3d.js
+            │   ├── FurnitureGrid.js
+            │   ├── FurnitureItem.css
+            │   ├── FurnitureItem.js
+            │   ├── ModelGrid.css
+            │   ├── ModelGrid.js
+            │   ├── ModelItem.js
+            │   ├── PaintGrid.css
+            │   ├── PaintGrid.js
+            │   ├── navbar.js
+            │   └── scrapedData/
+            │       ├── amazon_products.json
+            │       ├── furnScraper.py
+            │       └── requirements.txt
+            ├── Furniture/
+            │   ├── FurnitureColorPanel.js
+            │   └── Sofa.js
+            ├── Landing-Page/
+            │   ├── Landing.css
+            │   ├── LandingModel.js
+            │   └── landing.js
+            ├── Langchain/
+            │   ├── 1app.py
+            │   ├── .estimate_cache.db
+            │   └── .langchain.db
+            ├── Login-in/
+            │   ├── Buttons.css
+            │   ├── LoginButton.js
+            │   └── LogoutButton.js
+            ├── MainPage/
+            │   ├── AddRoomModal.js
+            │   ├── MainPage.css
+            │   ├── MainPage.js
+            │   ├── RoomCard.css
+            │   └── RoomCard.js
+            ├── NavBar/
+            │   ├── Navbar.css
+            │   └── Navbar.js
+            ├── RenovationEstimator/
+            │   ├── Renovation_Estimator.ipynb
+            │   └── updated_house_renovation_data.csv
+            └── RoomQuiz/
+                ├── RoomQuiz.css
+                ├── RoomQuiz.js
+                ├── linear_regression_model.h5
+                ├── linear_regression_model.joblib
+                ├── requirements.txt
+                └── server.py
