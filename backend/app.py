@@ -2,9 +2,10 @@ import streamlit as st
 import requests
 import json
 from typing import Dict, Any
+import os
 
 # Configuration
-API_BASE_URL = "http://localhost:8000"
+API_BASE_URL = os.getenv("API_BASE_URL", st.secrets.get("API_BASE_URL", "http://localhost:8000"))
 
 def call_api(endpoint: str, method: str = "GET", data: Dict[Any, Any] = None) -> Dict[Any, Any]:
     """Make API calls to FastAPI backend"""
