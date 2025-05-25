@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ArrowRight, Github } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
+import logo2 from "../assets/logo2.jpg";
 const LHero = () => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -12,8 +12,22 @@ const LHero = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative z-10 pt-20 pb-32">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="relative z-10 pt-20 pb-32 overflow-hidden">
+      {/* Rotating Logo Background - Centered on right edge */}
+      <div className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1/2 z-0 mr-4 mt-75">
+        <div className="w-330 h-330 opacity-10 animate-spin-slow">
+          <div className="w-full h-full rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
+            {/* GitOracle Logo - Using placeholder, replace with your actual logo */}
+             <img
+                                      src={logo2}
+                                      alt="Logo"
+                                      className="w-330 h-330 rounded-full object-cover"
+                                    />
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div
           className={`transform transition-all duration-1000 ${
             isVisible ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
@@ -36,14 +50,17 @@ const LHero = () => {
 
               {/* CTA Buttons */}
               <div className="flex flex-col md:flex-row gap-4 justify-center lg:justify-start items-center mb-10">
-                <button onClick={()=>navigate("/main")}
-                className="group bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-4 rounded-full text-lg font-semibold hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2">
+                <button
+                  onClick={() => navigate("/main")}
+                  className="group bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-4 rounded-full text-lg font-semibold hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2"
+                >
                   <span>Try GitOracle</span>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
                 <a
                   href="https://github.com/chaitra-samant/GitOracle"
-                  target="blank"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="group border-2 border-purple-400/50 px-8 py-4 rounded-full text-lg font-semibold hover:bg-purple-500/10 transition-all duration-300 flex items-center space-x-2"
                 >
                   <Github className="w-5 h-5" />
@@ -53,13 +70,13 @@ const LHero = () => {
             </div>
 
             {/* Right: Demo Preview */}
-            <div className="flex-1 w-full max-w-2xl">
+            <div className="flex-1 w-full max-w-2xl relative">
               <div className="mb-6">
                 <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent text-lg font-semibold">
                   🚀 Simplifying Codebases
                 </span>
               </div>
-              <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-lg rounded-2xl border border-purple-500/20 p-1">
+              <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-lg rounded-2xl border border-purple-500/20 p-1 relative">
                 <div className="bg-slate-900/80 rounded-xl p-6 backdrop-blur-sm">
                   <div className="flex items-center space-x-2 mb-4">
                     <div className="w-3 h-3 bg-red-500 rounded-full"></div>
@@ -91,6 +108,21 @@ const LHero = () => {
           {/* End of Flex Container */}
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes spin-slow {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        .animate-spin-slow {
+          animation: spin-slow 90s linear infinite;
+        }
+      `}</style>
     </section>
   );
 };
