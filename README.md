@@ -10,10 +10,10 @@ A powerful Retrieval-Augmented Generation (RAG) system that helps you understand
 ### 📸 Screenshots
 
 <p align="center">
-  <img src="demo/SS1.jpg" alt="Demo Screenshot 1" width="300"/>
-  <img src="demo/SS4.jpg" alt="Demo Screenshot 2" width="300"/>
-  <img src="demo/SS5.jpg" alt="Demo Screenshot 3" width="300"/>
-  <img src="demo/SS6.jpg" alt="Demo Screenshot 4" width="300"/>
+  <img src="demo/SS1.jpg" alt="Demo Screenshot 1" width="500"/>
+  <img src="demo/SS4.jpg" alt="Demo Screenshot 2" width="500"/>
+  <img src="demo/SS5.jpg" alt="Demo Screenshot 3" width="500"/>
+  <img src="demo/SS6.jpg" alt="Demo Screenshot 4" width="500"/>
 </p>
 
 
